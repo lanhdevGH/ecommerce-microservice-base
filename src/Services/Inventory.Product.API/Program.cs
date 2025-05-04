@@ -24,7 +24,7 @@ try
         app.UseSwaggerUI();
     }
 
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();  // For production, you might want to enable HTTPS redirection
 
     app.UseAuthorization();
 
