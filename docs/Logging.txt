@@ -1,0 +1,10 @@
+1. Danh sách mức log trong Serilog:
+
+| Level           | Ý nghĩa                                                   |
+| --------------- | --------------------------------------------------------- |
+| **Verbose**     | Mức chi tiết nhất. Ghi mọi thứ, thường dùng để debug sâu. |
+| **Debug**       | Thông tin dành cho lập trình viên để debug ứng dụng.      |
+| **Information** | Thông tin hoạt động bình thường của hệ thống.             |
+| **Warning**     | Có điều gì đó bất thường nhưng hệ thống vẫn hoạt động.    |
+| **Error**       | Lỗi xảy ra, nhưng ứng dụng vẫn tiếp tục chạy.             |
+| **Fatal**       | Lỗi nghiêm trọng, có thể khiến ứng dụng bị dừng.          |

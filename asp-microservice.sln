@@ -65,6 +65,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{073A38FB-92E0-4504-935F-EF265CF4CCB5}"
 	ProjectSection(SolutionItems) = preProject
 		docs\Commands.txt = docs\Commands.txt
+		docs\Logging.txt = docs\Logging.txt
 	EndProjectSection
 EndProject
 Global
