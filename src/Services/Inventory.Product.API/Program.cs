@@ -1,36 +1,22 @@
 using Common.Logging;
+using Product.API.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(Serilogger.Configure);
 
 Log.Information("Start Inventory Product API up");
 
 try
 {
-    // Add services to the container.
+    builder.Host.UseSerilog(Serilogger.Configure);
+    builder.AddAppConfigurations();
 
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    // Add services to the container.
+    builder.Services.AddInfrastructure();
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    //app.UseHttpsRedirection();  // For production, you might want to enable HTTPS redirection
-
-    app.UseAuthorization();
-
-    app.MapControllers();
-
-    app.Run();
+    app.UseInfrastructure();
 }
 catch (Exception ex)
 {
