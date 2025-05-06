@@ -12,10 +12,9 @@ namespace Common.Logging
             var environmentName = context.HostingEnvironment.EnvironmentName ?? "Development";
 
             configuration
-                .WriteTo.Debug()
-                .WriteTo.Console(outputTemplate:
-                    "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-                .Enrich.FromLogContext()
+                //.WriteTo.Debug()
+                //.WriteTo.Console()
+                //.Enrich.FromLogContext()
                 .Enrich.WithMachineName()
                 .Enrich.WithProperty("Environment", environmentName)
                 .Enrich.WithProperty("Application", applicationName)
