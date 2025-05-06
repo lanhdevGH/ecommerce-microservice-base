@@ -17,8 +17,14 @@ try
     var app = builder.Build();
     app.UseInfrastructure();
 
-    app.MigrateDatabase<ProductContext>()
-        .Run();
+    app.MigrateDatabase<ProductContext>((context, _) =>
+    {
+        // Use the Microsoft.Extensions.Logging.ILogger instead of Serilog.ILogger
+        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger<ProductContextSeed>();
+        ProductContextSeed.SeedProductAsync(context, logger).Wait();
+    })
+    .Run();
 }
 catch (Exception ex)
 {
