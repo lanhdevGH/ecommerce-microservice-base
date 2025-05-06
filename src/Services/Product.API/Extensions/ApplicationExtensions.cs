@@ -18,8 +18,6 @@ namespace Product.API.Extensions
             app.UseAuthorization();
 
             app.MapControllers();
-
-            app.Run();
         }
     }
 }

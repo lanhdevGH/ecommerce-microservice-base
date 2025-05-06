@@ -1,0 +1,95 @@
+services.AddDbContext<ProductContext>(m => 
+    m.UseMySql(builder.ConnectionString,
+               ServerVersion.AutoDetect(builder.ConnectionString),
+               e => {
+                   e.MigrationsAssembly("Product.API");
+                   e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
+               }));
+
+🧩 Giải thích chi tiết:
+
+    services.AddDbContext<ProductContext>(...)
+        Đăng ký ProductContext vào dependency injection container.
+
+        Cho phép ASP.NET Core tạo và quản lý lifecycle của ProductContext.
+
+    m.UseMySql(...)
+        Sử dụng MySQL làm database provider cho Entity Framework Core.
+
+        Cấu hình ProductContext để kết nối đến một database MySQL.
+
+    ServerVersion.AutoDetect(...)
+        Dùng để tự động phát hiện phiên bản MySQL đang dùng.
+
+        Quan trọng để EF Core biết cách sinh SQL tương thích với phiên bản MySQL đó.
+
+    e.MigrationsAssembly("Product.API")
+        Chỉ định assembly chứa migration.
+
+        Thường dùng khi bạn tách các project (ví dụ: DbContext ở project Infrastructure, còn migration nằm ở Product.API).
+
+        Cần thiết để EF biết lấy migration ở đâu khi chạy update-database hoặc add-migration.
+
+    e.SchemaBehavior(MySqlSchemaBehavior.Ignore)
+        MySQL không hỗ trợ schema như SQL Server.
+
+        Ignore giúp EF bỏ qua schema khi tạo migration hoặc truy vấn, tránh lỗi không tương thích.
+
+--------------------------------------------------------------------------------------------------------------------------------
+Lỗi:
+    Unable to create a 'DbContext' of type ''. 
+    The exception 'Unable to resolve service for type 'Microsoft.EntityFrameworkCore.DbContextOptions`1[Product.API.Persistences.ProductContext]' 
+    while attempting to activate 'Product.API.Persistences.ProductContext'.' was thrown while attempting to create an instance.
+
+❓ Tại sao lỗi này xảy ra?
+    Entity Framework Core khi chạy các lệnh design-time như:
+
+        Add-Migration
+
+        Update-Database
+
+        Script-Migration
+
+    ... thì nó cần tự khởi tạo một instance của DbContext (ở đây là ProductContext) mà không chạy ứng dụng.
+
+    ➡️ Nhưng trong code của bạn, ProductContext đang được cấu hình thông qua Dependency Injection (DI) 
+    ở Program.cs hoặc Startup.cs, ví dụ:
+
+        services.AddDbContext<ProductContext>(...);
+
+    Vì vậy khi chạy lệnh từ terminal/Package Manager, EF không thể truy cập được container DI => dẫn đến lỗi:
+
+-----------------------------------------------------------
+
+✅ Cách giải quyết đúng theo tài liệu chính thức
+    Entity Framework hỗ trợ một giao diện đặc biệt để giải quyết vấn đề này:
+
+    IDesignTimeDbContextFactory<TContext>
+        Khi bạn tạo một class implement giao diện này, EF sẽ ưu tiên dùng nó để khởi tạo DbContext ở design-time.
+
+        Bạn có thể tự cung cấp connection string, cấu hình, v.v...
+
+====================================================================================================================
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+
+namespace Product.API.Persistences
+{
+    public class ProductContextFactory : IDesignTimeDbContextFactory<ProductContext>
+    {
+        public ProductContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ProductContext>();
+            var connectionString = "server=localhost;database=ProductDB;user=root;password=123456";
+
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
+            {
+                e.MigrationsAssembly("Product.API");
+                e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
+            });
+
+            return new ProductContext(optionsBuilder.Options);
+        }
+    }
+}
+=====================================================================================================================

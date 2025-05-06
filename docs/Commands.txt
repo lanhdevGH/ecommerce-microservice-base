@@ -3,3 +3,62 @@ Các command hay dùng:
 - docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans --build
 
 - docker-compose -f docker-compose.yml -f docker-compose.override.yml down
+=========================================================================================================
+VOLUME
+	- Docker volume là một phần của Docker dùng để lưu trữ dữ liệu bên ngoài container. 
+	- Volume giúp bạn giữ lại dữ liệu ngay cả khi container bị xóa hoặc tái tạo.
+	- Volume được quản lý bởi Docker và có thể được chia sẻ giữa nhiều container.
+	- Volume thường được sử dụng để lưu trữ dữ liệu như cơ sở dữ liệu, tệp tin cấu hình, hoặc bất kỳ dữ liệu nào cần được bảo tồn.
+	------------------------------------------
+Để kiểm tra tất cả các volume trong Docker, bạn dùng lệnh sau:
+	Lệnh này sẽ hiển thị danh sách tất cả các volume hiện có trên hệ thống Docker của bạn.
+		- docker volume ls
+	Xem chi tiết một volume cụ thể:
+		- docker volume inspect <volume_name>
+		Thông tin trả về sẽ bao gồm:
+			- Mountpoint (đường dẫn thực trên máy)
+			- Labels
+			- Scope
+			- Container nào đang dùng volume đó (nếu có)
+	Xem container nào đang sử dụng volume
+		- docker ps -a --filter volume=<volume_name>
+		- docker ps -a --filter volume=<volume_id>
+	Xóa một volume:
+		- docker volume rm <volume_name>
+	Xóa tất cả volume không còn được sử dụng (dangling volumes):
+		- docker volume prune
+
+=========================================================================================================
+NETWORK
+	- Docker network là một phần của Docker giúp bạn quản lý cách mà các container giao tiếp với nhau và với thế giới bên ngoài.
+	- Mỗi container trong Docker có thể được kết nối với một hoặc nhiều mạng, cho phép chúng giao tiếp với nhau thông qua các địa chỉ IP hoặc tên miền.
+	- Docker cung cấp một số loại mạng khác nhau như bridge, host, overlay, và macvlan để phục vụ cho các nhu cầu khác nhau.
+	------------------------------------------
+
+	1. Để kiểm tra tất cả các network trong Docker, bạn dùng lệnh sau:
+		Lệnh này sẽ hiển thị danh sách tất cả các network hiện có trên hệ thống Docker của bạn.
+			- docker network ls
+	2. Xem chi tiết một network cụ thể:
+			- docker network inspect <network_name>
+			Thông tin trả về sẽ bao gồm:
+				- Driver (loại network)
+				- IPAM (IP Address Management)
+				- Containers (các container đang kết nối với network đó)
+	3. Xem container nào đang kết nối đến network nào:
+		- docker network inspect <network_name> | grep Name
+	4. Xóa các network không sử dụng:
+		- docker network prune
+
+=========================================================================================================
+
+DATABASE
+	Migrate database:
+		- dotnet ef migrations add "Init_ProductDB"
+		- dotnet ef database update
+
+	Kiểm tra quyền user trong mysql:
+		SELECT user,authentication_string,plugin,host FROM mysql.user;
+
+		CREATE USER IF NOT EXISTS 'root'@'172.18.0.1' IDENTIFIED BY 'Passw0rd!';
+		GRANT ALL PRIVILEGES ON *.* TO 'root'@'172.18.0.1' WITH GRANT OPTION;
+		FLUSH PRIVILEGES;
