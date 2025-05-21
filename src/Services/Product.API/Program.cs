@@ -1,4 +1,5 @@
 using Common.Logging;
+using Product.API;
 using Product.API.Extensions;
 using Product.API.Persistences;
 using Serilog;
@@ -13,9 +14,10 @@ try
     builder.AddAppConfigurations();
     // Add services to the container.
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
 
     var app = builder.Build();
-    app.UseInfrastructure();
+    app.UseInfrastructure();    
 
     app.MigrateDatabase<ProductContext>((context, _) =>
     {

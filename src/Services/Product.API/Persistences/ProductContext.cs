@@ -44,5 +44,13 @@ namespace Product.API.Persistences
 
             return base.SaveChangesAsync(cancellationToken);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<CatalogProduct>().HasIndex(x => x.No)
+                .IsUnique();
+        }
     }
 }
