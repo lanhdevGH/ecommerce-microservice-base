@@ -20,11 +20,18 @@ services:
     container_name: productdb
     environment:
       MYSQL_ROOT_PASSWORD: "Passw0rd!"
+      MYSQL_DATABASE: ProductDb
     restart: always
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 30s
+      interval: 10s
+      retries: 5
+      start_period: 30s
   
   #customerdb: postgres
   customerdb:
@@ -56,7 +63,6 @@ services:
       - mongo_data:/data/db
   
   #infrastructure section
-  
   rabbitmq:
     container_name: rabbitmq
     restart: always
@@ -105,3 +111,19 @@ services:
       - elasticsearch
     ports:
       - "5601:5601"
+
+  #microservices api sections
+  product.api:
+    container_name: product.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnection=Server=productdb;Port=3306;Database=ProductDB;Uid=root;Pwd=Passw0rd!;"
+    depends_on: 
+      productdb:
+        condition: service_healthy
+    ports:
+      - "6002:80"
+    restart: always
+    networks:
+      - default

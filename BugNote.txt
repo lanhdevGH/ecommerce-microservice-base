@@ -1,0 +1,2 @@
+1. Container nào lỗi, cứ vào xem log của nó
+2. 

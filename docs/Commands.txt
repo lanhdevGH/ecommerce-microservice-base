@@ -49,6 +49,23 @@ NETWORK
 	4. Xóa các network không sử dụng:
 		- docker network prune
 
+networks:
+  default:
+    name: tedu_microservices
+    driver: bridge
+
+	Dưới đây là lý do tại sao các service vẫn có thể "join" mạng:
+
+Mạng mặc định: Khi không chỉ định mạng cho từng service, 
+Docker Compose sẽ tự động sử dụng mạng mặc định được cấu hình trong phần networks. 
+Trong file của bạn, mạng này có tên là tedu_microservices và sử dụng driver bridge.
+
+Tính năng của Docker Compose: Docker Compose sẽ tự động kết nối tất cả các service 
+trong file Docker Compose với nhau trên cùng một mạng nếu không có mạng riêng biệt được 
+chỉ định. 
+Điều này giúp các service có thể giao tiếp với nhau thông qua tên service mà không cần 
+cấu hình thêm.
+
 =========================================================================================================
 
 DATABASE
