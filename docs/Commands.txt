@@ -79,3 +79,7 @@ DATABASE
 		CREATE USER IF NOT EXISTS 'root'@'172.18.0.1' IDENTIFIED BY 'Passw0rd!';
 		GRANT ALL PRIVILEGES ON *.* TO 'root'@'172.18.0.1' WITH GRANT OPTION;
 		FLUSH PRIVILEGES;
+
+=========================================================================================================
+
+Add-Migration InitialDB -Project Customer.API -OutputDir Migrations

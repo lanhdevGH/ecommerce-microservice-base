@@ -39,12 +39,17 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=DiscountDb
+      - POSTGRES_DB=CustomerDb
     restart: always
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d CustomerDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     
   #basketdb: redis
   basketdb:
@@ -127,3 +132,18 @@ services:
     restart: always
     networks:
       - default
+  
+  customer.api:
+    container_name: customer.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnection=Server=customerdb;Port=5432;Database=CustomerDb;User Id=admin;Password=admin1234;"
+    depends_on: 
+      customerdb:
+        condition: service_healthy
+    ports:
+      - "6003:80"
+    restart: always
+    networks:
+      - default  
