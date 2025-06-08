@@ -2,14 +2,13 @@ using Common.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(Serilogger.Configure);
+builder.Host.UseSharedSerilog("Hangfire service");
 
 Log.Information("Start Hangfire API up");
 
 try
 {
     // Add services to the container.
-
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();

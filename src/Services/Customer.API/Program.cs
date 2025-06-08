@@ -16,6 +16,8 @@ Log.Information("Start Customer Minimal API up");
 
 try
 {
+    builder.Host.UseSharedSerilog("Customer service");
+    builder.Services.AddHttpContextAccessor();
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +33,10 @@ try
 
     var app = builder.Build();
 
+    var httpContextProvider = app.Services.GetRequiredService<IHttpContextAccessor>();
+    HttpContextProvider.Accessor = httpContextProvider;
+
+    app.UseCorrelationIdLogging();
     // Configure the HTTP request pipeline.
     app.MapGet("/", () => "Welcome to Customer Minimal API!");
     app.MapCustomerEndpoints();

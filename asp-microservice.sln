@@ -69,6 +69,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{073A38FB-9
 		docs\Commands.txt = docs\Commands.txt
 		docs\Logging.txt = docs\Logging.txt
 		docs\MigrationDB.txt = docs\MigrationDB.txt
+		Redis_Commands.txt = Redis_Commands.txt
+		docs\redis_introduction.md = docs\redis_introduction.md
 	EndProjectSection
 EndProject
 Global

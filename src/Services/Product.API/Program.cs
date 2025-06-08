@@ -5,12 +5,12 @@ using Product.API.Persistences;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSharedSerilog("Product service");
 
 Log.Information("Start Product API up");
 
 try
 {
-    builder.Host.UseSerilog(Serilogger.Configure);
     builder.AddAppConfigurations();
     // Add services to the container.
     builder.Services.AddInfrastructure(builder.Configuration);
