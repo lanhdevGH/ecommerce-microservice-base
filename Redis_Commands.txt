@@ -1,0 +1,65 @@
+docker exec -it redis-container redis-cli
+
+
+1. Kiểm tra kết nối
+ping                # Kiểm tra kết nối (trả về PONG)
+echo "Hello"        # In chuỗi test
+
+2. Key-Value cơ bản
+set key value       # Gán giá trị
+get key             # Lấy giá trị
+del key             # Xóa key
+exists key          # Kiểm tra key tồn tại
+expire key seconds  # Đặt TTL
+ttl key             # Xem TTL còn lại
+persist key         # Bỏ TTL
+keys *              # Liệt kê tất cả key
+
+3. Strings
+append key value    # Nối giá trị vào cuối
+getset key value    # Gán giá trị mới và trả về giá trị cũ
+strlen key         # Độ dài của giá trị
+incr counter        # Tăng 1
+decr counter        # Giảm 1
+
+4. List(Danh sách)
+lpush mylist value   # Thêm vào đầu
+rpush mylist value   # Thêm vào cuối
+lpop mylist          # Lấy & xóa phần tử đầu
+rpop mylist          # Lấy & xóa phần tử cuối
+lrange mylist 0 -1   # Lấy toàn bộ list
+llen mylist          # Độ dài list
+
+5. Set (Tập hợp)
+sadd myset value     # Thêm phần tử
+smembers myset       # Xem phần tử
+sismember myset val  # Kiểm tra phần tử có tồn tại
+srem myset value     # Xóa phần tử
+scard myset          # Đếm phần tử
+
+6. Hash (Bảng băm)
+hset user name "John"       # Gán trường
+hget user name              # Lấy trường
+hgetall user                # Lấy toàn bộ field
+hmget user name age         # Lấy nhiều trường
+hdel user name              # Xóa field
+hexists user name           # Kiểm tra tồn tại
+
+7. Sorted Set (Tập hợp có thứ tự)
+zadd leaderboard 100 "Alice"          # Thêm với điểm
+zrange leaderboard 0 -1 withscores    # Lấy theo thứ tự
+zscore leaderboard "Alice"            # Lấy điểm
+zincrby leaderboard 10 "Alice"        # Tăng điểm
+
+8. Pub/Sub (Công bố/Đăng ký)
+publish channel "message"    # Gửi tin nhắn đến channel
+subscribe channel          # Đăng ký nhận tin nhắn
+unsubscribe channel        # Hủy đăng ký
+
+9. Transactions (Giao dịch)
+multi                   # Bắt đầu giao dịch
+exec                   # Thực hiện giao dịch
+discard                # Hủy giao dịch
+watch key              # Theo dõi key trước giao dịch
+
+

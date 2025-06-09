@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Enrichers.WithCaller;
 using Serilog.Events;
-using Serilog.Exceptions;
 
 namespace Common.Logging;
 

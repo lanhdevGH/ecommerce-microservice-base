@@ -25,6 +25,8 @@
 
     var httpContextProvider = app.Services.GetRequiredService<IHttpContextAccessor>();
     HttpContextProvider.Accessor = httpContextProvider;
+
+    app.UseCorrelationIdLogging();
    ```
 
 3. **Ghi log**:
