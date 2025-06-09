@@ -57,6 +57,12 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
   
   #inventorydb: mongo
   inventorydb:
@@ -144,6 +150,21 @@ services:
         condition: service_healthy
     ports:
       - "6003:80"
+    restart: always
+    networks:
+      - default  
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings:ConnectionString=basketdb:6379"
+    depends_on: 
+      basketdb:
+        condition: service_healthy
+    ports:
+      - "6004:80"
     restart: always
     networks:
       - default  

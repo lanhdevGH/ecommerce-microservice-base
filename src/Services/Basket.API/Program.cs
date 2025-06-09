@@ -9,6 +9,7 @@ Log.Information("Start Basket API up");
 
 try
 {
+    builder.Host.AddAppConfigurations();
     // Configure Serilog for the application
     builder.Host.UseSharedSerilog("Basket service");
     builder.Services.AddHttpContextAccessor();
