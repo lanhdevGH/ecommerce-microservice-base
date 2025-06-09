@@ -83,3 +83,24 @@ DATABASE
 =========================================================================================================
 
 Add-Migration InitialDB -Project Customer.API -OutputDir Migrations
+
+=========================================================================================================
+
+Check healthy service
+
+	healthcheck:
+	  test: ["CMD", "curl", "-f", "http://localhost:80/healthz"]
+	  interval: 10s
+	  timeout: 5s
+	  retries: 5
+	  start_period: 5s
+
+		test: ["CMD", "redis-cli", "ping"]: kiểm tra Redis có phản hồi "PONG" hay không.
+
+		interval: 10s: khoảng thời gian giữa các lần kiểm tra.
+
+		timeout: 5s: thời gian tối đa chờ mỗi lần kiểm tra.
+
+		retries: 5: số lần thử lại trước khi coi là unhealthy.
+
+		start_period: 5s: thời gian chờ trước khi bắt đầu kiểm tra sức khỏe.
