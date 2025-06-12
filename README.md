@@ -1,4 +1,4 @@
-##  AspnetCore Microservices:
+## AspnetCore Microservices:
 
 ## Prepare environment
 
@@ -62,5 +62,8 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remo
 - dotnet watch run --environment "Development"
 - dotnet restore
 - dotnet build
-- Migration commands:
-  - dotnet ef migrations add "SampleMigration" --project {project dir} --startup-project {project dir} --output-dir {project dir}\Migrations
+- Migration commands for Ordering API:
+  - install-package Microsoft.EntityFrameworkCore.Tools -Project Ordering.Infrastructure
+  - Add-Migration SampleMigration -Project Ordering.Infrastructure -StartupProject Ordering.API -OutputDir Persistence/Migrations
+  - Remove-Migration -Project Ordering.Infrastructure -StartupProject Ordering.API
+  - Update-Database -Project Ordering.Infrastructure -StartupProject Ordering.API

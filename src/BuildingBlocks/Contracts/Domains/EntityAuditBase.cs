@@ -2,7 +2,7 @@
 
 namespace Contracts.Domains
 {
-    internal class EntityAuditBase<Tkey> : EntityBase<Tkey>, IAuditable
+    public class EntityAuditBase<Tkey> : EntityBase<Tkey>, IAuditable
     {
         public DateTimeOffset CreatedDate { get; set; }
 
