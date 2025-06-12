@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Ordering.Application.Mappings;
+namespace Ordering.Application.Common.Mappings;
 
 public interface IMapFrom<T>
 {

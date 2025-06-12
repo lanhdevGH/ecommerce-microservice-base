@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using System.Reflection;
 
-namespace Ordering.Application.Mappings;
+namespace Ordering.Application.Common.Mappings;
 
 public class MappingProfile : Profile
 {
