@@ -17,10 +17,5 @@ namespace Customer.API.Repositories
             return await FindByCondition(x => x.UserName.Equals(username))
                 .SingleOrDefaultAsync();
         }
-
-        Task<Entities.Customer> ICustomerRepository.GetCustomerByUsernameAsync(string username)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
