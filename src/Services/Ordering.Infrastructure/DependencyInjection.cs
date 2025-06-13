@@ -20,7 +20,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<OrderDBContextSeed>();
-        services.AddScoped(typeof(IRepositoryBaseAsync<,>), typeof(RepositoryBase<,>));
+        services.AddScoped(typeof(IRepositoryBase<,>), typeof(RepositoryBase<,>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         return services;

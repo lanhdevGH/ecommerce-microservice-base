@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Ordering.Infrastructure.Repositories;
 
-public class RepositoryBase<T, K> : IRepositoryBaseAsync<T, K> where T : EntityBase<K>
+public class RepositoryBase<T, K> : IRepositoryBase<T, K> where T : EntityBase<K>
 {
     private readonly OrderDBContext _dbContext;
     private readonly IUnitOfWork _unitOfWork;
