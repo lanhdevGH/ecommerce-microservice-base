@@ -16,7 +16,6 @@ public interface IRepositoryQueryBase<T, K> where T : EntityBase<K>
 
     Task<T?> GetByIdAsync(K id);
     Task<T?> GetByIdAsync(K id, params Expression<Func<T, object>>[] includeProperties);
-    Task<int> SaveChangesAsync();
 }
 
 public interface IRepositoryBaseAsync<T, K> : IRepositoryQueryBase<T, K>
@@ -28,6 +27,8 @@ public interface IRepositoryBaseAsync<T, K> : IRepositoryQueryBase<T, K>
     Task UpdateListAsync(IEnumerable<T> entities);
     Task DeleteAsync(T entity);
     Task DeleteListAsync(IEnumerable<T> entities);
+    Task<int> SaveChangesAsync();
+
 
     Task<IDbContextTransaction> BeginTransactionAsync();
     Task EndTransactionAsync();
