@@ -2,20 +2,19 @@
 using Contracts.Domains;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Linq.Expressions;
 
 namespace Infrastructure.Common;
 
-public class RepositoryBaseAsync<T, K, TContext> :
-    RepositoryQueryBaseAsync<T, K, TContext>,
-    IRepositoryBaseAsync<T, K, TContext>
+public class RepositoryBase<T, K, TContext> :
+    RepositoryQueryBase<T, K, TContext>,
+    IRepositoryBase<T, K, TContext>
     where T : EntityBase<K>
     where TContext : DbContext
 {
     private readonly TContext _dbContext;
     private readonly IUnitOfWork<TContext> _unitOfWork;
 
-    public RepositoryBaseAsync(TContext dbContext, IUnitOfWork<TContext> unitOfWork) : base(dbContext)
+    public RepositoryBase(TContext dbContext, IUnitOfWork<TContext> unitOfWork) : base(dbContext)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -67,5 +66,5 @@ public class RepositoryBaseAsync<T, K, TContext> :
         return Task.CompletedTask;
     }
 
-    private Task<int> SaveChangesAsync() => _unitOfWork.CommitAsync();
+    public Task<int> SaveChangesAsync() => _unitOfWork.CommitAsync();
 }

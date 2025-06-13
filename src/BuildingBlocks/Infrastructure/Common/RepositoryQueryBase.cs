@@ -5,13 +5,13 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Common;
 
-public class RepositoryQueryBaseAsync<T, K, TContext> : IRepositoryQueryBase<T, K, TContext>
+public class RepositoryQueryBase<T, K, TContext> : IRepositoryQueryBase<T, K, TContext>
     where T : EntityBase<K>
     where TContext : DbContext
 {
     private readonly TContext _dbContext;
 
-    public RepositoryQueryBaseAsync(TContext dbContext)
+    public RepositoryQueryBase(TContext dbContext)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
@@ -46,9 +46,4 @@ public class RepositoryQueryBaseAsync<T, K, TContext> : IRepositoryQueryBase<T, 
     public async Task<T?> GetByIdAsync(K id, params Expression<Func<T, object>>[] includeProperties) =>
         await FindByCondition(x => x.Id.Equals(id), trackChanges: false, includeProperties)
             .FirstOrDefaultAsync();
-
-    public Task<int> SaveChangesAsync()
-    {
-        throw new NotImplementedException();
-    }
 }

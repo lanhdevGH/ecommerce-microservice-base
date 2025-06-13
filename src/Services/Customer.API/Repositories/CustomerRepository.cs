@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Customer.API.Repositories
 {
-    public class CustomerRepository : RepositoryBaseAsync<Entities.Customer, int, CustomerContext>,
+    public class CustomerRepository : RepositoryBase<Entities.Customer, int, CustomerContext>,
         ICustomerRepository
     {
         public CustomerRepository(CustomerContext context, IUnitOfWork<CustomerContext> unitOfWork) : base(context, unitOfWork)
@@ -16,6 +16,11 @@ namespace Customer.API.Repositories
         {
             return await FindByCondition(x => x.UserName.Equals(username))
                 .SingleOrDefaultAsync();
+        }
+
+        Task<Entities.Customer> ICustomerRepository.GetCustomerByUsernameAsync(string username)
+        {
+            throw new NotImplementedException();
         }
     }
 }
