@@ -1,5 +1,6 @@
 using Common.Logging;
 using Contracts.Common.Interfaces;
+using Customer.API;
 using Customer.API.Endpoints;
 using Customer.API.Persistence;
 using Customer.API.Repositories;
@@ -12,13 +13,14 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Information("Start Customer Minimal API up");
+Log.Information($"Start {builder.Environment.ApplicationName} up");
 
 try
 {
     builder.Host.UseSharedSerilog("Customer service");
     builder.Services.AddHttpContextAccessor();
     builder.Services.AddControllers();
+    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -38,7 +40,7 @@ try
 
     app.UseCorrelationIdLogging();
     // Configure the HTTP request pipeline.
-    app.MapGet("/", () => "Welcome to Customer Minimal API!");
+    app.MapGet("/", () => $"Welcome to {builder.Environment.ApplicationName}!");
     app.MapCustomerEndpoints();
 
     app.UseSwagger();
@@ -46,7 +48,7 @@ try
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json",
-            "Swagger Customer Minimal API v1");
+            $"Swagger {builder.Environment.ApplicationName} v1");
     });
 
     // app.UseHttpsRedirection(); //production only
@@ -69,6 +71,6 @@ catch (Exception ex)
 }
 finally
 {
-    Log.Information("Shut down Customer API complete");
+    Log.Information($"Shut down {builder.Environment.ApplicationName} complete");
     Log.CloseAndFlush();
 }
