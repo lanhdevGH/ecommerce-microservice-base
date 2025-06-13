@@ -73,6 +73,15 @@ DATABASE
 		- dotnet ef migrations add "Init_ProductDB"
 		- dotnet ef database update
 
+		- dotnet watch run --environment "Development"
+		- dotnet restore
+		- dotnet build
+		- Migration commands for Ordering API:
+		  - install-package Microsoft.EntityFrameworkCore.Tools -Project Ordering.Infrastructure
+		  - Add-Migration SampleMigration -Project Ordering.Infrastructure -StartupProject Ordering.API -OutputDir Persistence/Migrations
+		  - Remove-Migration -Project Ordering.Infrastructure -StartupProject Ordering.API
+		  - Update-Database -Project Ordering.Infrastructure -StartupProject Ordering.API
+
 	Kiểm tra quyền user trong mysql:
 		SELECT user,authentication_string,plugin,host FROM mysql.user;
 

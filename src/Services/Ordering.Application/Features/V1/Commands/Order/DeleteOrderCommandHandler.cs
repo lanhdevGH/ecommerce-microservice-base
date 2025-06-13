@@ -1,0 +1,45 @@
+using MediatR;
+using Ordering.Application.Common.Interfaces;
+using Shared.SeedWork;
+using Common.Logging;
+using Microsoft.Extensions.Logging;
+
+namespace Ordering.Application.Features.V1.Commands.Order;
+
+public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, ApiResult<bool>>
+{
+    private readonly IOrderRepository _repository;
+    private readonly ILogger<DeleteOrderCommandHandler> _logger;
+
+    public DeleteOrderCommandHandler(IOrderRepository repository, ILogger<DeleteOrderCommandHandler> logger)
+    {
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    public async Task<ApiResult<bool>> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Deleting order with ID: {OrderId}", request.Id);
+
+        try
+        {
+            var existingOrder = await _repository.GetByIdAsync(request.Id);
+            if (existingOrder == null)
+            {
+                _logger.LogWarning("Order with ID: {OrderId} not found", request.Id);
+                return new ApiErrorResult<bool>("Order not found");
+            }
+
+            await _repository.DeleteAsync(existingOrder);
+            await _repository.SaveChangesAsync();
+
+            _logger.LogInformation("Order with ID: {OrderId} deleted successfully", request.Id);
+            return new ApiSuccessResult<bool>(true);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting order with ID: {OrderId}", request.Id);
+            return new ApiErrorResult<bool>("Failed to delete order");
+        }
+    }
+}

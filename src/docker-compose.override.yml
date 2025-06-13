@@ -167,4 +167,19 @@ services:
       - "6004:80"
     restart: always
     networks:
+      - default 
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:OrderingConnection=Server=orderdb;Database=OrderDb;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;MultipleActiveResultSets=True;"
+    depends_on: 
+      basketdb:
+        condition: service_healthy
+    ports:
+      - "6004:80"
+    restart: always
+    networks:
       - default  
