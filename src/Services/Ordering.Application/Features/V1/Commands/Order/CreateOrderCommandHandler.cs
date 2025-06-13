@@ -1,11 +1,9 @@
 using AutoMapper;
+using Common.Logging;
 using MediatR;
 using Ordering.Application.Common.Interfaces;
-using Ordering.Domain.Entities;
 using Ordering.Domain.Enums;
 using Shared.SeedWork;
-using Common.Logging;
-using Microsoft.Extensions.Logging;
 
 namespace Ordering.Application.Features.V1.Commands.Order;
 
@@ -13,9 +11,9 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _repository;
-    private readonly ILogger<CreateOrderCommandHandler> _logger;
+    private readonly ICustomLogger<CreateOrderCommandHandler> _logger;
 
-    public CreateOrderCommandHandler(IMapper mapper, IOrderRepository repository, ILogger<CreateOrderCommandHandler> logger)
+    public CreateOrderCommandHandler(IMapper mapper, IOrderRepository repository, ICustomLogger<CreateOrderCommandHandler> logger)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -24,7 +22,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
 
     public async Task<ApiResult<long>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Creating new order for user: {UserName}", request.UserName);
+        _logger.Info($"Creating new order for user: {request.UserName}");
 
         try
         {
@@ -43,12 +41,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Api
             var result = await _repository.CreateAsync(orderEntity);
             await _repository.SaveChangesAsync();
 
-            _logger.LogInformation("Order created successfully with ID: {OrderId}", result);
+            _logger.Info($"Order created successfully with ID: {result}");
             return new ApiSuccessResult<long>(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating order for user: {UserName}", request.UserName);
+            _logger.Err(ex, $"Error creating order for user: {request.UserName}");
             return new ApiErrorResult<long>("Failed to create order");
         }
     }

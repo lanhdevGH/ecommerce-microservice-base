@@ -4,7 +4,6 @@ using Ordering.Application.Common.DTOs;
 using Ordering.Application.Common.Interfaces;
 using Shared.SeedWork;
 using Common.Logging;
-using Microsoft.Extensions.Logging;
 
 namespace Ordering.Application.Features.V1.Queries.Order;
 
@@ -12,9 +11,9 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, ApiRe
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _repository;
-    private readonly ILogger<GetAllOrdersQueryHandler> _logger;
+    private readonly ICustomLogger<GetAllOrdersQueryHandler> _logger;
 
-    public GetAllOrdersQueryHandler(IMapper mapper, IOrderRepository repository, ILogger<GetAllOrdersQueryHandler> logger)
+    public GetAllOrdersQueryHandler(IMapper mapper, IOrderRepository repository, ICustomLogger<GetAllOrdersQueryHandler> logger)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -23,19 +22,19 @@ public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, ApiRe
 
     public async Task<ApiResult<List<OrderDto>>> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting all orders");
+        _logger.Info("Getting all orders");
 
         try
         {
             var orderEntities = _repository.FindAll();
             var orderList = _mapper.Map<List<OrderDto>>(orderEntities);
 
-            _logger.LogInformation("Retrieved {Count} orders", orderList.Count);
+            _logger.Info($"Retrieved {orderList.Count} orders");
             return new ApiSuccessResult<List<OrderDto>>(orderList);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting all orders");
+            _logger.Err(ex, "Error getting all orders");
             return new ApiErrorResult<List<OrderDto>>("Failed to retrieve orders");
         }
     }

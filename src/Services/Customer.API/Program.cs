@@ -1,4 +1,5 @@
 using Common.Logging;
+using Common.Logging.Serilog;
 using Contracts.Common.Interfaces;
 using Customer.API;
 using Customer.API.Endpoints;

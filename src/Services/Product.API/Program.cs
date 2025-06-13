@@ -1,4 +1,4 @@
-using Common.Logging;
+using Common.Logging.Serilog;
 using Product.API;
 using Product.API.Extensions;
 using Product.API.Persistences;

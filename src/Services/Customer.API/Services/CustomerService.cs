@@ -1,11 +1,9 @@
 using AutoMapper;
+using Common.Logging;
 using Customer.API.Repositories.Interfaces;
 using Customer.API.Services.Interfaces;
-using Shared.DTOs.CustomerDTOs;
-using Serilog;
-using Common.Logging;
 using Microsoft.EntityFrameworkCore;
-using ILogger = Serilog.ILogger;
+using Shared.DTOs.CustomerDTOs;
 
 namespace Customer.API.Services
 {
@@ -13,13 +11,13 @@ namespace Customer.API.Services
     {
         private readonly ICustomerRepository _repository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private readonly ICustomLogger<CustomerService> _logger;
 
-        public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
+        public CustomerService(ICustomerRepository customerRepository, IMapper mapper, ICustomLogger<CustomerService> logger)
         {
             _repository = customerRepository;
             _mapper = mapper;
-            _logger = Log.ForContext<CustomerService>();
+            _logger = logger;
             _logger.Info("CustomerService initialized successfully");
         }
 

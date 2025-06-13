@@ -12,12 +12,12 @@ public class PerformanceBehaviour<TRequest, TResponse> :
     where TRequest : IRequest<TResponse>
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger _logger;
+    private readonly ICustomLogger<PerformanceBehaviour<TRequest, TResponse>> _logger;
 
-    public PerformanceBehaviour()
+    public PerformanceBehaviour(ICustomLogger<PerformanceBehaviour<TRequest, TResponse>> logger)
     {
         _timer = new Stopwatch();
-        _logger = Log.ForContext<PerformanceBehaviour<TRequest, TResponse>>();
+        _logger = logger;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

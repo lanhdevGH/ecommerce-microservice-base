@@ -1,17 +1,15 @@
 ﻿using Common.Logging;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Domain.Entities;
-using Serilog;
-using ILogger = Serilog.ILogger;
 
 namespace Ordering.Infrastructure.Persistence;
 
 public class OrderDBContextSeed
 {
-    private readonly ILogger _logger = Log.ForContext<OrderDBContextSeed>();
+    private readonly ICustomLogger<OrderDBContextSeed> _logger;
     private readonly OrderDBContext _context;
 
-    public OrderDBContextSeed(ILogger logger, OrderDBContext context)
+    public OrderDBContextSeed(ICustomLogger<OrderDBContextSeed> logger, OrderDBContext context)
     {
         _logger = logger;
         _context = context;

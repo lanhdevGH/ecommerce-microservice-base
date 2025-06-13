@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
-namespace Common.Logging;
+namespace Common.Logging.Serilog;
 
 public class CorrelationIdMiddleware
 {

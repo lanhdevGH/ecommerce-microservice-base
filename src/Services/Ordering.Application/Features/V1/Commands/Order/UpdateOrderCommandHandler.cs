@@ -3,7 +3,6 @@ using MediatR;
 using Ordering.Application.Common.Interfaces;
 using Shared.SeedWork;
 using Common.Logging;
-using Microsoft.Extensions.Logging;
 
 namespace Ordering.Application.Features.V1.Commands.Order;
 
@@ -11,9 +10,9 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
 {
     private readonly IMapper _mapper;
     private readonly IOrderRepository _repository;
-    private readonly ILogger<UpdateOrderCommandHandler> _logger;
+    private readonly ICustomLogger<UpdateOrderCommandHandler> _logger;
 
-    public UpdateOrderCommandHandler(IMapper mapper, IOrderRepository repository, ILogger<UpdateOrderCommandHandler> logger)
+    public UpdateOrderCommandHandler(IMapper mapper, IOrderRepository repository, ICustomLogger<UpdateOrderCommandHandler> logger)
     {
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -22,14 +21,14 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
 
     public async Task<ApiResult<bool>> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Updating order with ID: {OrderId}", request.Id);
+        _logger.Info($"Updating order with ID: {request.Id}");
 
         try
         {
             var existingOrder = await _repository.GetByIdAsync(request.Id);
             if (existingOrder == null)
             {
-                _logger.LogWarning("Order with ID: {OrderId} not found", request.Id);
+                _logger.Info($"Order with ID: {request.Id} not found");
                 return new ApiErrorResult<bool>("Order not found");
             }
             existingOrder.FirstName = request.FirstName;
@@ -41,12 +40,12 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
             await _repository.UpdateAsync(existingOrder);
             await _repository.SaveChangesAsync();
 
-            _logger.LogInformation("Order with ID: {OrderId} updated successfully", request.Id);
+            _logger.Info($"Order with ID: {request.Id} updated successfully");
             return new ApiSuccessResult<bool>(true);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating order with ID: {OrderId}", request.Id);
+            _logger.Err(ex, $"Error updating order with ID: {request.Id}");
             return new ApiErrorResult<bool>("Failed to update order");
         }
     }

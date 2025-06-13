@@ -1,14 +1,13 @@
-using Common.Logging;
 using Serilog;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
 using Ordering.Application;
+using Common.Logging.Serilog;
+using Common.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSharedSerilog("Order service");
-
-Log.Information("Start Ordering API up");
-
+builder.Services.AddHttpContextAccessor();
 try
 {
     // Add services to the container.
@@ -20,6 +19,11 @@ try
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
+
+    var httpContextProvider = app.Services.GetRequiredService<IHttpContextAccessor>();
+    HttpContextProvider.Accessor = httpContextProvider;
+
+    app.UseCorrelationIdLogging();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
