@@ -62,6 +62,7 @@ public class RepositoryBase<T, K> : IRepositoryBase<T, K> where T : EntityBase<K
     public async Task<K> CreateAsync(T entity)
     {
         await _dbContext.Set<T>().AddAsync(entity);
+        await SaveChangesAsync(); 
         return entity.Id;
     }
 
