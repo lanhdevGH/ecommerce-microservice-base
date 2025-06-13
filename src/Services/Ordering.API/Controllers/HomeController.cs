@@ -7,6 +7,7 @@ namespace Ordering.API.Controllers
     //    public IActionResult Index()
     //    {
     //        return Redirect("~/swagger");
+    //        return Ok();
     //    }
     //}
 }
