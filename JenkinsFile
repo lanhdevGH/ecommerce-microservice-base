@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: "${env.Branch_Name}", 
+                credentialsId: "github-token", 
+                url: "${env.code_repo_url}"
+            }
+        }
+        
+    }
+}
