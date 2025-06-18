@@ -113,3 +113,8 @@ Check healthy service
 		retries: 5: số lần thử lại trước khi coi là unhealthy.
 
 		start_period: 5s: thời gian chờ trước khi bắt đầu kiểm tra sức khỏe.
+
+GIT: 
+	- Lệnh xóa các file đã tracked trong Git:
+		git ls-files | grep '.*/appsettings\..*\.json$' | xargs git rm --cached
+
