@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Not tracking appsetting.env.json
+**/appsettings.*.json
+!**/appsettings.json
