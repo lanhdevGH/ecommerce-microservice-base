@@ -53,7 +53,7 @@ services:
       dockerfile: Services/Basket.API/Dockerfile
       
   ordering.api:
-    image: ${DOCKER_REGISTRY-}basket-api:${PLATFORM:-linux}-${TAG:-latest}
+    image: ${DOCKER_REGISTRY-}ordering-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Ordering.API/Dockerfile
