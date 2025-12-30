@@ -13,13 +13,13 @@ public class SerializerService : ISerializerService
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             NullValueHandling = NullValueHandling.Ignore,
-            Converters = new List<JsonConverter>
-            {
+            Converters =
+            [
                 new StringEnumConverter
                 {
                     NamingStrategy = new CamelCaseNamingStrategy(),
                 }
-            }
+            ]
         });
     }
 
@@ -30,6 +30,7 @@ public class SerializerService : ISerializerService
 
     public T Deserialize<T>(string text)
     {
-        return JsonConvert.DeserializeObject<T>(text);
+        var result = JsonConvert.DeserializeObject<T>(text);
+        return result is null ? throw new InvalidOperationException("Deserialization returned null.") : result;
     }
 }
