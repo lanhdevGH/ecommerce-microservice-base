@@ -1,24 +1,23 @@
+using Common.Logging;
+using Contracts.Services.SMTP;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.DTOs;
-using Ordering.Application.Features.V1.Queries.Order;
 using Ordering.Application.Features.V1.Commands.Order;
+using Ordering.Application.Features.V1.Queries.Order;
+using Shared.Services.Email;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using Common.Logging;
 
 namespace Ordering.API.Controllers;
 
-public class OrdersController : BaseController
+public class OrdersController(IMediator mediator, 
+    ICustomLogger<OrdersController> logger, 
+    ISmtpEmailService emailService) : BaseController
 {
-    private readonly IMediator _mediator;
-    private readonly ICustomLogger<OrdersController> _logger;
-
-    public OrdersController(IMediator mediator, ICustomLogger<OrdersController> logger)
-    {
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    private readonly ICustomLogger<OrdersController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly ISmtpEmailService _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
 
     private static class RouteNames
     {
@@ -37,6 +36,26 @@ public class OrdersController : BaseController
         _logger.Info("Getting all orders");
         var query = new GetAllOrdersQuery();
         var result = await _mediator.Send(query);
+
+        // mail
+        var mailMessage = new MailRequest
+        {
+            Body = "This is a test email from the Orders API.",
+            Subject = "Test Email from Orders API",
+            ToAddress = "thanhlanhlit@gmail.com"
+        };
+
+        try
+        {
+            _logger.Info("Sending test email");
+            await _emailService.SendEmailAsync(mailMessage);
+            _logger.Info("Test email sent successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.Err(ex, "Failed to send test email");
+        }
+
         return Ok(result);
     }
 
@@ -69,7 +88,7 @@ public class OrdersController : BaseController
         _logger.Info($"Creating new order for user: {createOrderDto.UserName}");
         var command = new CreateOrderCommand(createOrderDto);
         var result = await _mediator.Send(command);
-        
+
         if (result.IsSucceeded)
         {
             return CreatedAtRoute(RouteNames.GetOrderById, new { id = result.Data }, result);

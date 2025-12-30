@@ -4,6 +4,7 @@ using Ordering.Infrastructure.Persistence;
 using Ordering.Application;
 using Common.Logging.Serilog;
 using Common.Logging;
+using Ordering.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSharedSerilog("Order service");
@@ -11,6 +12,8 @@ builder.Services.AddHttpContextAccessor();
 try
 {
     // Add services to the container.
+    builder.AddAppConfigurations();
+
     builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices(builder.Configuration);
 
